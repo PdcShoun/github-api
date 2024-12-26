@@ -1,25 +1,25 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-type FetchMethod = 'GET' | 'POST' | 'DELETE' | 'PUT'
+type FetchMethod = 'GET' | 'POST' | 'DELETE' | 'PUT';
 type Label = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 type PullRequest = {
-  labels: Label[]
-}
+  labels: Label[];
+};
 type GithubBody = {
-  name?: string
-  description?: string
-  private?: boolean
-  commit_title?: string
-  commit_message?: string
-  head?: string
-  merge_method?: string
-}
+  name?: string;
+  description?: string;
+  private?: boolean;
+  commit_title?: string;
+  commit_message?: string;
+  head?: string;
+  merge_method?: string;
+};
 
-dotenv.config()
-const GITHUB_URL = process.env.GITHUB_URL || 'https://api.github.com'
+dotenv.config();
+const GITHUB_URL = process.env.GITHUB_URL || 'https://api.github.com';
 
 export async function createGithubRepo(
   token: string,
@@ -29,21 +29,21 @@ export async function createGithubRepo(
   const data = await fetchGithubApi(token, `/user/repos`, 'POST', {
     name: repo,
     description: 'This is your first repository',
-    private: true,
-  })
-  return data
+    private: true
+  });
+  return data;
 }
 
 export async function getGithubRepos(token: string) {
-  const username = await getGithubUsername(token)
-  const data = await fetchGithubApi(token, `/users/${username}/repos`, 'GET')
-  return data
+  const username = await getGithubUsername(token);
+  const data = await fetchGithubApi(token, `/users/${username}/repos`, 'GET');
+  return data;
 }
 
 export async function getGithubUsername(token: string): Promise<string> {
-  const data = await fetchGithubApi(token, `/user`, 'GET', {})
-  const { login } = data
-  return login
+  const data = await fetchGithubApi(token, `/user`, 'GET', {});
+  const { login } = data;
+  return login;
 }
 
 export async function deleteGithubRepo(
@@ -56,21 +56,21 @@ export async function deleteGithubRepo(
     `/repos/${owner}/${repo}`,
     'DELETE',
     {}
-  )
-  return data
+  );
+  return data;
 }
 
 export async function getGithupPullRequestRepo(
   token: string,
   repoName: string
 ) {
-  const username = await getGithubUsername(token)
+  const username = await getGithubUsername(token);
   const data = await fetchGithubApi(
     token,
     `/repos/${username}/${repoName}/pulls`,
     'GET'
-  )
-  return data
+  );
+  return data;
 }
 
 async function fetchGithubApi(
@@ -83,16 +83,16 @@ async function fetchGithubApi(
     method,
     headers: {
       Authorization: `Bearer ${token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
+      'X-GitHub-Api-Version': '2022-11-28'
     },
-    body: method !== 'GET' ? JSON.stringify(body) : null,
-  })
-  const data = await res.json()
+    body: method !== 'GET' ? JSON.stringify(body) : null
+  });
+  const data = await res.json();
   if (res.ok) {
-    return data
+    return data;
   }
-  console.error(data)
-  throw new Error(data.message)
+  console.error(data);
+  throw new Error(data.message);
 }
 
 export async function mergeGithubPullRequest(
@@ -100,14 +100,14 @@ export async function mergeGithubPullRequest(
   repoName: string,
   prId: string
 ) {
-  const username = await getGithubUsername(token)
+  const username = await getGithubUsername(token);
   const data: PullRequest = await fetchGithubApi(
     token,
     `/repos/${username}/${repoName}/pulls/${prId}`,
     'GET'
-  )
+  );
   if (data.labels.some((label) => label.name === 'do not merge')) {
-    throw new Error("Pull request has label 'do not merge'")
+    throw new Error("Pull request has label 'do not merge'");
   }
   const result = await fetchGithubApi(
     token,
@@ -116,9 +116,9 @@ export async function mergeGithubPullRequest(
     {
       commit_title: 'Merge pull request',
       commit_message: 'Merge pull request',
-      merge_method: 'merge',
+      merge_method: 'merge'
     }
-  )
+  );
 
-  return result
+  return result;
 }

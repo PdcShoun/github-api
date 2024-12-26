@@ -1,14 +1,14 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response } from 'express';
 
-import repositoriesRoute from './routes/repositories.route'
+import repositoriesRoute from './routes/repositories.route';
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use('/repositories', repositoriesRoute)
+app.use(express.json());
+app.use('/repositories', repositoriesRoute);
 
 app.get('/', (_req: Request, res: Response) => {
-  res.json({ hello: 'world' })
-})
+  res.json({ hello: 'world' });
+});
 
-export default app
+export default app;

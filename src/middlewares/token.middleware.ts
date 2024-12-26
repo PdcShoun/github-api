@@ -1,14 +1,14 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
 export const tokenMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const githubToken = req.headers.authorization
+  const githubToken = req.headers.authorization;
   if (!githubToken) {
-    res.sendStatus(401)
+    res.sendStatus(401);
   } else {
-    next()
+    next();
   }
-}
+};
