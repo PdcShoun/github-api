@@ -1,13 +1,29 @@
 import dotenv from 'dotenv'
 
 type FetchMethod = 'GET' | 'POST' | 'DELETE' | 'PUT'
+type Label = {
+  id: number
+  name: string
+}
+type PullRequest = {
+  labels: Label[]
+}
+type GithubBody = {
+  name?: string
+  description?: string
+  private?: boolean
+  commit_title?: string
+  commit_message?: string
+  head?: string
+  merge_method?: string
+}
 
 dotenv.config()
 const GITHUB_URL = process.env.GITHUB_URL || 'https://api.github.com'
 
 export async function createGithubRepo(
   token: string,
-  owner: string,
+  _owner: string,
   repo: string
 ) {
   const data = await fetchGithubApi(token, `/user/repos`, 'POST', {
@@ -61,7 +77,7 @@ async function fetchGithubApi(
   token: string,
   path: string,
   method: FetchMethod,
-  body: any = null
+  body?: GithubBody
 ) {
   const res = await fetch(`${GITHUB_URL}${path}`, {
     method,
@@ -78,13 +94,7 @@ async function fetchGithubApi(
   console.error(data)
   throw new Error(data.message)
 }
-type Label = {
-  id: number
-  name: string
-}
-type PullRequest = {
-  labels: Label[]
-}
+
 export async function mergeGithubPullRequest(
   token: string,
   repoName: string,
