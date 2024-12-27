@@ -19,3 +19,23 @@ jobs:
 
       - name: Run Linter
         run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: print secret
+        run: echo "my secret ${{ secrets.DOCKERHUB_USERNAME }}"
+
+      - uses: mr-smithers-excellent/docker-build-push@v6
+        name: Build & push Docker image
+        with:
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/githup-api
+          tags: main
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
