@@ -1,5 +1,5 @@
 ### Install project
 `npm i`
 
-### Run server
+### Run server dev
 `npm run dev`

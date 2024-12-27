@@ -11,4 +11,6 @@ app.get('/', (_req: Request, res: Response) => {
   res.json({ hello: 'world' });
 });
 
+const a = 1
+
 export default app;
