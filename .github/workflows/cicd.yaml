@@ -17,6 +17,9 @@ jobs:
         -   name: Install project
             run: npm install
 
+        -   name: Run Formatting
+            run: npm run format
+
         -   name: Run Linter
             run: npm run lint
 

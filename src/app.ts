@@ -8,7 +8,7 @@ app.use(express.json());
 app.use('/repositories', repositoriesRoute);
 
 app.get('/', (_req: Request, res: Response) => {
-  res.json({ hello: 'world' });
+  res.json({ hello: 'world' })
 });
 
 export default app;
