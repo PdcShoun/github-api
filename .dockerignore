@@ -1,4 +1,6 @@
 Dockerfile
 
 .gitignore
+.git
+
 dist/
