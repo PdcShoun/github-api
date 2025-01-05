@@ -41,8 +41,8 @@ export async function deleteRepository(req: Request, res: Response) {
   try {
     const { repository_name, owner } = req.body;
     const githubToken = req.headers.authorization as string;
-    const data = await deleteGithubRepo(githubToken, owner, repository_name);
-    res.json({ data });
+    await deleteGithubRepo(githubToken, owner, repository_name);
+    res.status(204);
   } catch (e) {
     if (e instanceof Error) {
       res.status(400).json({ error: e.message });
