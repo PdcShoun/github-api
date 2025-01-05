@@ -1,7 +1,10 @@
 ### Install project
 
-`npm i`
+```bash
+npm i
+```
 
 ### Run server dev
-
-`npm run dev`
+```bash
+npm run dev
+```

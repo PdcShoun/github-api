@@ -29,7 +29,7 @@ export async function createGithubRepo(
   const data = await fetchGithubApi(token, `/user/repos`, 'POST', {
     name: repo,
     description: 'This is your first repository',
-    private: true
+    private: false
   });
   return data;
 }
@@ -41,7 +41,7 @@ export async function getGithubRepos(token: string) {
 }
 
 export async function getGithubUsername(token: string): Promise<string> {
-  const data = await fetchGithubApi(token, `/user`, 'GET', {});
+  const data = await fetchGithubApi(token, `/user`, 'GET');
   const { login } = data;
   return login;
 }
@@ -51,12 +51,7 @@ export async function deleteGithubRepo(
   owner: string,
   repo: string
 ) {
-  const data = await fetchGithubApi(
-    token,
-    `/repos/${owner}/${repo}`,
-    'DELETE',
-    {}
-  );
+  const data = await fetchGithubApi(token, `/repos/${owner}/${repo}`, 'DELETE');
   return data;
 }
 
@@ -85,14 +80,15 @@ async function fetchGithubApi(
       Authorization: `Bearer ${token}`,
       'X-GitHub-Api-Version': '2022-11-28'
     },
-    body: method !== 'GET' ? JSON.stringify(body) : null
+    body: body ? JSON.stringify(body) : undefined
   });
-  const data = await res.json();
+  const text = await res.text();
   if (res.ok) {
-    return data;
+    if (text) return JSON.parse(text);
+    else return {};
   }
-  console.error(data);
-  throw new Error(data.message);
+  console.error(text);
+  throw new Error(text);
 }
 
 export async function mergeGithubPullRequest(
